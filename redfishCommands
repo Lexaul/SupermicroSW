@@ -1,0 +1,15 @@
+curl -X PATCH -u ADMIN:ADMIN -k https://BMCIP/redfish/v1/Systems/1/Bios -d'{"Attributes":{"CSMSupport":"Disabled"}}' | json_reformat
+//Disable CSMSupport 
+curl -X PATCH -u ADMIN:ADMIN -k https://BMCIP/redfish/v1/Systems/1/SecureBoot -d'{"SecureBootEnable":true}' | json_reformat
+//開啟Secure Boot
+curl -X GET -u ADMIN:ADMIN -k https://BMCIP/redfish/v1/Systems/1/SecureBoot | json_reformat
+//獲取SecureBoot資訊 
+curl -X GET -u ADMIN:ADMIN -k https://BMCIP/redfish/v1/Systems/1/Bios | json_reformat
+//獲取Bios資訊 
+curl -X GET -u ADMIN:ADMIN -k https://BMCIP/redfish/v1/Systems/1/Bios/SD | json_reformat
+//檢視下次重啟時會變更的設定
+curl -X GET -u ADMIN:ADMIN -k https://BMCIP/registries/BiosAttributeRegistry.1.0.0.json | json_reformat > 2.txt
+//This registry defines a representation of BIOS Attribute instances
+curl -X POST -u ADMIN:ADMIN -k https://[BMC IP]/redfish/v1/UpdateService/upload -F 'UpdateParameters={"Targets":["/redfish/v1/Systems/1/Bios"],"@Redfish.OperationApplyTime":"OnReset","Oem":{"Supermicro":{"BIOS":{"PreserveME":false,"PreserveNVRAM":false,"PreserveSMBIOS":true,"BackupBIOS":false,"PreserveBOOTCONF":true}}}}' -F UpdateFile=@"[BIOS bin file location]"
+//redfish 更新BIOS指令
+
